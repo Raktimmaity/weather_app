@@ -13,7 +13,7 @@
 
 ## Screenshots
 
-![App Screenshot](./counter.png)
+![App Screenshot](./demo.png)
 
 
 ## Demo
