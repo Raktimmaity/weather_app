@@ -4,6 +4,7 @@
 
 - Interactive UI
 - Create using React JS + vite
+- Using Open Weather Map API
 
 
 ## Authors
