@@ -91,3 +91,16 @@
         padding: 10px;
     }
   }
+
+.loader {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 20px;
+    color: #333;
+}
+
+.error-msg {
+    text-align: center;
+    color: red;
+    margin-top: 10px;
+}

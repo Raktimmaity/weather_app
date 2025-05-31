@@ -12,6 +12,8 @@ import humidity_icon from '../assets/humidity.png'
 const Weather = () => {
     const inputRef = useRef()
     const [weatherData, setWeatherData] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const allIcons = {
         "01d": clear_icon,
@@ -32,12 +34,14 @@ const Weather = () => {
 
     const fetchWeatherByCoords = async (lat, lon) => {
         try {
+            setLoading(true);
+            setErrorMessage("");
             const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
             const response = await fetch(url);
             const data = await response.json();
 
             if (data.cod !== 200) {
-                alert(data.message);
+                setErrorMessage(data.message);
                 return;
             }
 
@@ -50,10 +54,11 @@ const Weather = () => {
                 location: data.name,
                 icon: icon
             });
-
         } catch (error) {
-            console.error("Error fetching location weather:", error);
-            search("Kolkata"); // fallback
+            setErrorMessage("Error fetching weather data.");
+            console.error("Error fetching by coordinates:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -63,12 +68,14 @@ const Weather = () => {
             return;
         }
         try {
+            setLoading(true);
+            setErrorMessage("");
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${import.meta.env.VITE_APP_ID}`;
             const response = await fetch(url);
             const data = await response.json();
 
             if (data.cod !== 200) {
-                alert(data.message);
+                setErrorMessage(data.message);
                 return;
             }
 
@@ -82,25 +89,30 @@ const Weather = () => {
             });
         } catch (error) {
             setWeatherData(false);
-            console.error("Error in fetching data");
+            setErrorMessage("Error fetching weather data.");
+            console.error("Error in search fetch:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         if (navigator.geolocation) {
+            setLoading(true);
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     fetchWeatherByCoords(latitude, longitude);
                 },
                 (error) => {
-                    console.warn("Location permission denied or error:", error.message);
-                    search("Kolkata"); // fallback city
+                    setErrorMessage("Location permission denied. Showing default city.");
+                    console.warn("Location error:", error.message);
+                    search("Kolkata"); // fallback
                 }
             );
         } else {
-            console.warn("Geolocation not supported.");
-            search("Kolkata"); // fallback city
+            setErrorMessage("Geolocation not supported. Showing default city.");
+            search("Kolkata");
         }
     }, [])
 
@@ -110,27 +122,34 @@ const Weather = () => {
                 <input ref={inputRef} type="text" placeholder='Type here any city....' />
                 <img src={search_icon} alt="Search" onClick={() => search(inputRef.current.value)} />
             </div>
-            {weatherData ? <>
-                <img src={weatherData.icon} alt="Weather Icon" className='weather-icon' />
-                <p className='temperature'>{weatherData.temperature} &deg; C</p>
-                <p className='location'>{weatherData.location}</p>
-                <div className="weather-data">
-                    <div className="col">
-                        <img src={humidity_icon} alt="Humidity" />
-                        <div className='left-data'>
-                            <p>{weatherData.humidity} %</p>
-                            <span>Humidity</span>
+
+            {loading && <div className="loader">Loading...</div>}
+
+            {errorMessage && <div className="error-msg">{errorMessage}</div>}
+
+            {!loading && weatherData ? (
+                <>
+                    <img src={weatherData.icon} alt="Weather Icon" className='weather-icon' />
+                    <p className='temperature'>{weatherData.temperature} &deg; C</p>
+                    <p className='location'>{weatherData.location}</p>
+                    <div className="weather-data">
+                        <div className="col">
+                            <img src={humidity_icon} alt="Humidity" />
+                            <div className='left-data'>
+                                <p>{weatherData.humidity} %</p>
+                                <span>Humidity</span>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <img src={wind_icon} alt="Wind Speed" />
+                            <div className='right-data'>
+                                <p>{weatherData.windSpeed} Km/h</p>
+                                <span>Wind Speed</span>
+                            </div>
                         </div>
                     </div>
-                    <div className="col">
-                        <img src={wind_icon} alt="Wind Speed" />
-                        <div className='right-data'>
-                            <p>{weatherData.windSpeed} Km/h</p>
-                            <span>Wind Speed</span>
-                        </div>
-                    </div>
-                </div>
-            </> : null}
+                </>
+            ) : null}
         </div>
     )
 }
