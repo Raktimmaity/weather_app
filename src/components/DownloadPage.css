@@ -1,0 +1,125 @@
+/* Container for the whole page */
+.download-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+/* White card container */
+.download-container {
+  background: white;
+  max-width: 450px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  padding: 40px 30px;
+  text-align: center;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Heading */
+.download-container h1 {
+  font-size: 2.5rem;
+  color: #1e293b;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+/* Description paragraph */
+.download-container p {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+/* App image */
+.app-image {
+  width: 160px;
+  margin: 0 auto 35px;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.12));
+}
+
+/* Buttons container */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Buttons common style */
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 14px 26px;
+  border-radius: 14px;
+  color: white;
+  font-size: 1.1rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Google Play button */
+.btn-google {
+  background-color: #22c55e;
+}
+
+.btn-google:hover,
+.btn-google:focus {
+  background-color: #16a34a;
+  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.6);
+}
+
+/* Apple App Store button */
+.btn-apple {
+  background-color: #1e293b;
+}
+
+.btn-apple:hover,
+.btn-apple:focus {
+  background-color: #111827;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.6);
+}
+
+/* Icon inside button */
+.icon {
+  font-size: 1.4rem;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .download-container {
+    padding: 30px 20px;
+  }
+
+  .btn {
+    font-size: 1rem;
+    padding: 12px 20px;
+  }
+
+  .app-image {
+    width: 130px;
+    margin-bottom: 25px;
+  }
+}

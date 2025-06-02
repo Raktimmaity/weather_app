@@ -8,8 +8,13 @@ import rain_icon from "../assets/rain.png";
 import snow_icon from "../assets/snow.png";
 import wind_icon from "../assets/wind.png";
 import humidity_icon from "../assets/humidity.png";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { FaDownload } from "react-icons/fa";
+
 
 const Weather = () => {
+  const navigate = useNavigate();
   const inputRef = useRef();
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
@@ -20,9 +25,7 @@ const Weather = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [weatherAlerts, setWeatherAlerts] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
-
-
-
+  const [showAlert, setShowAlert] = useState(true);
 
   // **Added currentTime state**
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -44,6 +47,29 @@ const Weather = () => {
     "13n": snow_icon,
   };
 
+  useEffect(() => {
+  if (showAlert) {
+    const timer = setTimeout(() => {
+      Swal.fire({
+        title: "Download Our App!",
+        text: "Get instant weather updates with our mobile app.",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Download Now",
+        cancelButtonText: "Maybe Later",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/download");
+        }
+        setShowAlert(false); // prevent repeat until you reset this
+      });
+    }, 5000);
+    return () => clearTimeout(timer);
+  }
+}, [showAlert, navigate]);
+
   const getBackgroundClass = (iconCode) => {
     if (iconCode.includes("13")) return "snow";
     if (iconCode.includes("09") || iconCode.includes("10")) return "rain";
@@ -53,14 +79,17 @@ const Weather = () => {
   };
 
   const handleInputChange = async (e) => {
-  const query = e.target.value;
-  if (!query) return setSuggestions([]);
+    const query = e.target.value;
+    if (!query) return setSuggestions([]);
 
-  const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${import.meta.env.VITE_APP_ID}`);
-  const data = await res.json();
-  setSuggestions(data);
-};
-
+    const res = await fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${
+        import.meta.env.VITE_APP_ID
+      }`
+    );
+    const data = await res.json();
+    setSuggestions(data);
+  };
 
   const formatTime = (unix) => {
     const date = new Date(unix * 1000);
@@ -226,25 +255,25 @@ const Weather = () => {
   }, []);
 
   return (
-    <div className={`weather ${backgroundClass}`}>
-      
+    <div className={`weather ${backgroundClass}`} >
       <div className="weather-container">
         <div className="search-bar">
           <input ref={inputRef} type="text" placeholder="Search city..." />
           <ul className="autocomplete-suggestions">
-  {suggestions.map((city, idx) => (
-    <li key={idx} onClick={() => {
-      inputRef.current.value = city.name;
-      setSuggestions([]);
-      search(city.name);
-    }}>
-      {city.name}, {city.country}
-    </li>
-  ))}
-</ul>
-
+            {suggestions.map((city, idx) => (
+              <li
+                key={idx}
+                onClick={() => {
+                  inputRef.current.value = city.name;
+                  setSuggestions([]);
+                  search(city.name);
+                }}
+              >
+                {city.name}, {city.country}
+              </li>
+            ))}
+          </ul>
           &nbsp;
-          
           <button
             onClick={() => search(inputRef.current.value)}
             style={{
@@ -334,6 +363,23 @@ const Weather = () => {
             </div>
           </>
         )}
+      </div>
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <button
+          onClick={() => navigate('/download')}
+          style={{
+            cursor: 'pointer',
+            padding: '10px 20px',
+            fontSize: '16px',
+            borderRadius: '5px',
+            border: 'none',
+            backgroundColor: '#3085d6',
+            color: 'white',
+            fontWeight: 'bold',
+          }}
+        >
+        <FaDownload />  Download the App
+        </button>
       </div>
     </div>
   );
