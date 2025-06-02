@@ -17,7 +17,7 @@ const DownloadPage = () => {
         />
         <div className="button-group">
           <a
-            href="https://play.google.com/store/apps" 
+            href="https://drive.google.com/file/d/12iI_UAn9jK0zKAH9Oly9SPK9a9Z6gQdu/view?usp=sharing" 
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-google"
