@@ -12,7 +12,7 @@
 .weather-container {
   background: rgba(0, 0, 0, 0.45);
   border-radius: 20px;
-  padding: 2rem 3rem;
+  padding: 5rem 8rem;
   max-width: 700px;
   width: 100%;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
@@ -366,7 +366,7 @@
 
 .weather-right .col span {
   font-size: 0.9rem;
-  color: #666;
+  color: #ffffff;
 }
 
 /* Forecast container */
@@ -447,6 +447,13 @@
   .forecast-item {
     flex: 1 1 70px;
     padding: 8px;
+  }
+  .search-bar input {
+    width: 100%;
+  }
+  .search-bar{
+    flex-direction: column;
+    gap: 0px;
   }
 }
 
